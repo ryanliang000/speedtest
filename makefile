@@ -1,9 +1,16 @@
 all : speed
 CXX = g++
+OBJS := $(notdir $(patsubst %.cpp, %.o, $(wildcard *.cpp ./src/*))) 
 CXXFLAGS += -std=c++11
 CXXFLAGS += -DVERBOSE
-speed:
-	${CXX} -o speed -I./include ./src/main.cpp ./src/socket.cpp -I./include ${CXXFLAGS} 
+CXXFLAGS += -I./include
+vpath %.cpp ./src
 
+speed : ${OBJS}
+	@echo "build $@"
+	${CXX} -o $@ $^
+
+.PHONY : clean
 clean:
-	-rm speed
+	@echo "clean speed ${OBJS}"
+	-rm speed ${OBJS}
