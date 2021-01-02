@@ -52,18 +52,20 @@ void runServer() {
     ServerSocket socket(PORT);
     socket.open();
 	int num = 0;
+	int total = 0;
     while (1) {
         ClientSocket client = socket.accept();
         cout << "Client Connected!" << endl;
         while ((num=client.read(buf, BUFFER_SIZE)) != -1) {
             client.send(replybuf, 1);
-            
+            total += num; 
 #ifdef VERBOSE
             cout << "Recv:" << num << endl;
 #endif
 
         }
-        cout << "Client Disconnected!" << endl;
+        cout << "Client Disconnected! total recv bytes:" << total<< endl;
+		total = 0;
     }
 }
 
