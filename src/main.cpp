@@ -33,11 +33,14 @@ void runClient(string ip, int times);
 int main(int argc, char *argv[]) {
     socket_init();
     if (argc != 3 && argc != 2) {
+        cout << "run as server" << endl;
         runServer();
     } else {
         if (argc == 2) {
+            cout << "run as client" << endl;
             runClient(string(argv[1]), 10);
         } else if (argc == 3) {
+		    cout << "run as client" << endl;
             runClient(string(argv[1]), atoi(argv[2]));
         }
     }
