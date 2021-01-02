@@ -69,8 +69,9 @@ int Socket::socket_close(Socket::SOCKET sock) {
     status = shutdown(sock, SD_BOTH);
     if (status == 0) { status = closesocket(sock); }
   #else
-    status = shutdown(sock, SHUT_RDWR);
-    if (status == 0) { status = close(sock); }
+    close(sock);
+	//status = shutdown(sock, SHUT_RDWR);
+    //if (status == 0) { status = close(sock); }
   #endif
 
   return status;

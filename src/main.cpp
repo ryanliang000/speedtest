@@ -96,6 +96,7 @@ void runClient(string ip, int times) {
     for (runningTotal = 0; runningTotal < times; runningTotal++) {
         clientSendSingle(&socket);
     }
+	socket.close();
     long end_time = current_time_millis();
     long inBytes = (long)(times) * (long)(BUFFER_SIZE);
     char sizeNotation[12];
