@@ -51,14 +51,15 @@ int main(int argc, char *argv[]) {
 void runServer() {
     ServerSocket socket(PORT);
     socket.open();
+	int num = 0;
     while (1) {
         ClientSocket client = socket.accept();
         cout << "Client Connected!" << endl;
-        while (client.read(buf, BUFFER_SIZE) != -1) {
+        while ((num=client.read(buf, BUFFER_SIZE)) != -1) {
             client.send(replybuf, 1);
             
 #ifdef VERBOSE
-            cout << "Packet Received!" << endl;
+            cout << "Recv:" << num << endl;
 #endif
 
         }
