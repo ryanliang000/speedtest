@@ -48,31 +48,39 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
+char* readable_size(double size, char *buf);
+long current_time_millis();
 void runServer() {
     ServerSocket socket(PORT);
     socket.open();
 	int num = 0;
-	int total = 0;
     while (1) {
-        ClientSocket client = socket.accept();
+        int inBytes = 0;
+		ClientSocket client = socket.accept();
         cout << "Client Connected!" << endl;
+		long start_time = current_time_millis();
         while ((num=client.read(buf, BUFFER_SIZE)) != -1) {
             client.send(replybuf, 1);
-            total += num; 
+            inBytes += num; 
 #ifdef VERBOSE
             cout << "Recv:" << num << endl;
 #endif
 
         }
-        cout << "Client Disconnected! total recv bytes:" << total<< endl;
-		total = 0;
+		long end_time = current_time_millis();
+		long time_diff = end_time - start_time;
+		double time_seconds = time_diff / 1000.0;
+        cout << "Client Disconnected!"
+			 << " receivd bytes:" << inBytes  << "(BYTE)"
+			 << " expend time:" << time_seconds << "(s)" 
+			 << endl;
+	    char sizeNotation[12];
+		readable_size((double)(inBytes) / time_seconds, (char *)&sizeNotation);
+        cout << "Speed: " << sizeNotation << "/s" << endl;
     }
 }
 
 void clientSendSingle(ClientSocket *s);
-char* readable_size(double size, char *buf);
-long current_time_millis();
-
 void runClient(string ip, int times) {
     cout << "Populating Buffer..." << endl;
     unsigned int v = rand(), *ptr = (unsigned int *)buf;
