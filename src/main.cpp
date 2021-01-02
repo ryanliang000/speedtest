@@ -60,9 +60,11 @@ void runServer() {
         int num = 0;
 		while ((num =client.read(buf, BUFFER_SIZE)) != -1) {
             if (num == 1){// test download
-			    client.send(buf, BUFFER_SIZE);	
+			    cout << "Download test" << endl;
+				client.send(buf, BUFFER_SIZE);	
 			}
 			else{// test upload
+				cout << "Upload test" << endl;
 				client.send(replybuf, 1);
             }
 #ifdef VERBOSE

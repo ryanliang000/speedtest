@@ -1,8 +1,9 @@
 all : speed
 CXX : g++
-
+CXXFLAGS += -std=c++11
+CXXFLAGS += -DVERBOSE
 speed:
-	${CXX} -o speed -std=c++11 -I./include ./src/main.cpp ./src/socket.cpp -I./include -std=c++11
+	${CXX} -o speed -I./include ./src/main.cpp ./src/socket.cpp -I./include ${CXXFLAGS} 
 
 clean:
-	-rm speed *.o
+	-rm speed
