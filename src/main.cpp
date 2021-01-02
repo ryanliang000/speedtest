@@ -59,13 +59,12 @@ void runServer() {
 		ClientSocket client = socket.accept();
         cout << "Client Connected!" << endl;
 		long start_time = current_time_millis();
-        while ((num=client.read(buf, BUFFER_SIZE)) != -1) {
+        while ((num=client.read(buf, BUFFER_SIZE)) <= 0) {
             client.send(replybuf, 1);
             inBytes += num; 
 #ifdef VERBOSE
             cout << "Recv:" << num << endl;
 #endif
-
         }
 		long end_time = current_time_millis();
 		long time_diff = end_time - start_time;
