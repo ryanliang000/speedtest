@@ -22,8 +22,8 @@ using namespace Socket;
 
 // 5MB
 #define BUFFER_SIZE 5 * (1024 * 1024)
-#define PORT 9885
-#define DOWN 1
+#define PORT 9883
+#define DOWN 0
 char buf[BUFFER_SIZE];
 char replybuf[1];
 
