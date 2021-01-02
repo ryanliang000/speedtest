@@ -20,10 +20,10 @@
 using namespace std;
 using namespace Socket;
 
-// 10MB
-#define BUFFER_SIZE 10 * (1024 * 1024)
-#define PORT 9883
-
+// 5MB
+#define BUFFER_SIZE 5 * (1024 * 1024)
+#define PORT 9885
+#define DOWN 1
 char buf[BUFFER_SIZE];
 char replybuf[1];
 
@@ -33,11 +33,14 @@ void runClient(string ip, int times);
 int main(int argc, char *argv[]) {
     socket_init();
     if (argc != 3 && argc != 2) {
-        runServer();
+        cout << "run as server" << endl;
+		runServer();
     } else {
         if (argc == 2) {
+			cout << "run as client" << endl;
             runClient(string(argv[1]), 10);
         } else if (argc == 3) {
+			cout << "run as client" << endl;
             runClient(string(argv[1]), atoi(argv[2]));
         }
     }
@@ -48,12 +51,20 @@ int main(int argc, char *argv[]) {
 void runServer() {
     ServerSocket socket(PORT);
     socket.open();
+	unsigned int v = rand(), *ptr = (unsigned int *)buf;
+    for(int i = 0; i < BUFFER_SIZE / 4; i++)
+    	ptr[i] = (v << 16) ^ rand();
     while (1) {
         ClientSocket client = socket.accept();
         cout << "Client Connected!" << endl;
-        while (client.read(buf, BUFFER_SIZE) != -1) {
-            client.send(replybuf, 1);
-            
+        int num = 0;
+		while ((num =client.read(buf, BUFFER_SIZE)) != -1) {
+            if (num == 1){// test download
+			    client.send(buf, BUFFER_SIZE);	
+			}
+			else{// test upload
+				client.send(replybuf, 1);
+            }
 #ifdef VERBOSE
             cout << "Packet Received!" << endl;
 #endif
@@ -102,6 +113,11 @@ void clientSendSingle(ClientSocket *s) {
 #ifdef VERBOSE
     cout << "Sending Packet" << endl;
 #endif
+    if (DOWN){
+		s->send(replybuf, 1);
+		s->read(buf, BUFFER_SIZE);
+		return;
+	}
     s->send(buf, BUFFER_SIZE);
     s->read(replybuf, 1);
 }
